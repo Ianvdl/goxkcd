@@ -7,21 +7,39 @@ import (
 	"strings"
 )
 
-func main() {
-	source, _ := http.Get("http://m.xkcd.com")
-	response, _ := ioutil.ReadAll(source.Body)
-	body := string(response)
+func get(url string) string {
+	response, errget := http.Get(url)
+	if errget != nil {
+		return "Could not retrieve resource: " + errget.Error()
+	}
+
+	result, errread := ioutil.ReadAll(response.Body)
+	if errread != nil {
+		return "Could not parse content: " + errread.Error()
+	}
+
+	body := string(result)
+	return body
+}
+
+func parse_page(body string) (image, title string) {
 	//Get image line
 	body = body[strings.Index(body, "<img id=\"comic\""):]
 	body = body[:strings.Index(body, "/>")+2]
 	//Get image URL
-	image := body[strings.Index(body, "src=\"")+5:]
+	image = body[strings.Index(body, "src=\"")+5:]
 	image = image[:strings.Index(image, "\"")]
 	//Get title
-	title := body[strings.Index(body, "alt=\"")+5:]
+	title = body[strings.Index(body, "alt=\"")+5:]
 	title = title[:strings.Index(title, "\"")]
 
-	fmt.Println("HTML Source Line: ", body)
+	return image, title
+}
+
+func main() {
+	body := get("http://m.xkcd.com")
+	image, title := parse_page(body)
+
 	fmt.Println("Image URL: ", image)
 	fmt.Println("Comic Title: ", title)
 

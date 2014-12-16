@@ -46,5 +46,5 @@ func main() {
 	imagefile, _ := http.Get(image)
 	imagebytes, _ := ioutil.ReadAll(imagefile.Body)
 
-	ioutil.WriteFile(title+".png", imagebytes, 0777)
+	ioutil.WriteFile(title+".png", imagebytes, 0644)
 }

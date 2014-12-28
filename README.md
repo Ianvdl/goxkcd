@@ -1,5 +1,4 @@
 ![alt tag](https://travis-ci.org/Ianvdl/goxkcd.svg?branch=master)
-
 goxkcd
 ======
 
